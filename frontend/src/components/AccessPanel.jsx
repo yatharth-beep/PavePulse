@@ -40,17 +40,6 @@ export default function AccessPanel({ user, onNotify }) {
       <button onClick={refresh} className="rounded-xl border border-white/10 px-3 py-2 text-sm text-slate-300 hover:bg-white/5">Refresh users</button>
     </div>
 
-    <section className="rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.045] p-4 sm:p-5">
-      <div className="flex items-start gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-200">i</div>
-        <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-white">Authentication is managed by Supabase</h3>
-          <p className="mt-1 text-sm leading-6 text-slate-400">PavePulse sign-in uses Supabase Auth. Creating a row in the operational database alone does not create a login account, so new accounts must first be created in Supabase Dashboard → Authentication → Users. Then authorize the email for the Engineer or Worker role in the API environment configuration and redeploy the API. Role permissions are verified by the server, not by this screen.</p>
-          <a className="mt-3 inline-flex rounded-lg border border-white/10 px-3 py-2 text-xs font-medium text-slate-200 hover:bg-white/5" href="https://supabase.com/dashboard" target="_blank" rel="noreferrer">Open Supabase Dashboard ↗</a>
-        </div>
-      </div>
-    </section>
-
     {error ? <div role="alert" className="rounded-xl border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm text-red-200">{error}</div> : null}
 
     <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
