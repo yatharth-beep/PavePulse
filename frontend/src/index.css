@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* { box-sizing: border-box; }
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: radial-gradient(1200px 600px at 10% -10%, #12324a 0%, transparent 45%),
+    radial-gradient(900px 500px at 100% 0%, #2a1a12 0%, transparent 40%), #070b12;
+}
+
+.map-shell .maplibregl-ctrl-attrib {
+  background: rgba(7, 11, 18, 0.72);
+  color: #94a3b8;
+}
+
+.map-shell .maplibregl-ctrl-logo {
+  opacity: 0.45;
+}
+
+.pulse-dot {
+  animation: pulse 1.6s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #243049;
+  border-radius: 99px;
+}
+
+
+.map-shell { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 420px; }
+.map-shell.maplibregl-map { position: absolute; inset: 0; width: 100%; height: 100%; }
+.map-shell .maplibregl-map { position: absolute; inset: 0; width: 100%; height: 100%; }
+.map-shell .maplibregl-canvas { outline: none; }
+.map-shell .maplibregl-ctrl-attrib { background: rgba(7, 11, 18, 0.78); color: #cbd5e1; }
+.map-shell .maplibregl-ctrl-attrib a { color: #bae6fd; }
+.map-shell .maplibregl-ctrl-logo { opacity: 0.75; }
+
+
+button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid rgba(103, 232, 249, 0.9);
+  outline-offset: 2px;
+}
+
+::selection { color: #04131b; background: rgba(103, 232, 249, 0.85); }
+
+.map-shell .maplibregl-ctrl-group {
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  background: rgba(7,11,18,0.88);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+}
+.map-shell .maplibregl-ctrl-group button { background-color: transparent; }
+.map-shell .maplibregl-ctrl-group button + button { border-top-color: rgba(255,255,255,0.1); }
+.map-shell .maplibregl-ctrl-group button:hover { background-color: rgba(255,255,255,0.08); }
+.map-shell .maplibregl-ctrl button .maplibregl-ctrl-icon { filter: invert(0.9); }
+.map-shell .maplibregl-ctrl-attrib { max-width: min(70vw, 460px); font-size: 10px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}

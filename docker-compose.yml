@@ -1,0 +1,62 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: pavepulse
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pavepulse-dev-only}
+      POSTGRES_DB: pavepulse
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pavepulse -d pavepulse"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  api:
+    build: ./backend
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: postgresql+psycopg2://pavepulse:${POSTGRES_PASSWORD:-pavepulse-dev-only}@db:5432/pavepulse
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
+      JWT_SECRET: ${JWT_SECRET:-development-only-secret-change-before-production-32bytes}
+      BOOTSTRAP_ENGINEER_PASSWORD: ${BOOTSTRAP_ENGINEER_PASSWORD:-}
+      DEVICE_API_KEY: ${DEVICE_API_KEY:-dev-device-key-change-me}
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_JWT_SECRET: ${SUPABASE_JWT_SECRET:-}
+      SUPABASE_ENGINEER_EMAILS: ${SUPABASE_ENGINEER_EMAILS:-engineer@pavepulse.local}
+      SUPABASE_WORKER_EMAILS: ${SUPABASE_WORKER_EMAILS:-worker@pavepulse.local}
+      DEMO_DATA_ENABLED: ${DEMO_DATA_ENABLED:-false}
+      VERIFICATION_REQUIRED_BUSES: ${VERIFICATION_REQUIRED_BUSES:-2}
+      VERIFICATION_RADIUS_METERS: ${VERIFICATION_RADIUS_METERS:-35}
+      SIMULATOR_ENABLED: ${SIMULATOR_ENABLED:-true}
+      SEED_ON_STARTUP: ${SEED_ON_STARTUP:-true}
+      EVIDENCE_STORAGE_DIR: /data/evidence
+    volumes:
+      - evidence-data:/data/evidence
+    expose:
+      - "8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE: ${VITE_API_BASE:-}
+    ports:
+      - "5173:80"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  evidence-data:
