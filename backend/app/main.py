@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from sqlalchemy import text
 
 from app.config import settings
@@ -49,7 +49,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origin_list,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PATCH", "OPTIONS"],
+    allow_methods=["GET", "HEAD", "POST", "PATCH", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type", "X-Device-Key"],
 )
 
@@ -83,6 +83,17 @@ def health():
     except Exception:
         return JSONResponse(status_code=503, content={"status": "error", "service": "pavepulse", "database": "unavailable"})
     return {"status": "ok", "service": "pavepulse", "database": "ok"}
+
+
+@app.head("/api/v1/health")
+def health_head():
+    """Lightweight health check for monitors that use HTTP HEAD by default."""
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+    except Exception:
+        return Response(status_code=503)
+    return Response(status_code=200)
 
 
 @app.get("/api/v1/meta")
